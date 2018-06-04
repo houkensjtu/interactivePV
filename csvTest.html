@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>D3 Page Template</title>
+        <script type="text/javascript" src="d3/d3.js"></script>
+
+        <style type="text/css">
+
+            circle:hover {
+                fill: orange;
+            }
+        </style>
+    </head>
+    <body>
+
+    <h1>Readin csv file...</h1>
+    <svg width="900" height="500" style="background-color : lightgrey"></svg>
+    <script>
+d3.text("test.CSV", function(error, text) {
+    var data = d3.csvParseRows(text);
+    var dataset = [];
+    for(i=16;i<5016;i+=125){ 
+    dataset.push( parseFloat(data[i][7]) );
+    } 
+    console.log(dataset);
+    d3.select("body svg").selectAll("circle")
+      .data(dataset).enter().append("circle")
+      .attr("cx",function(d,i){ return i*15;})
+      .attr("cy",function(d){ return (d-2)*300; })
+      .attr("r", 4)
+      .attr("fill","green")
+    }
+
+);
+    </script>
+
+    </body>
+</html>

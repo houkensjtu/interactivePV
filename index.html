@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>D3 Page Template</title>
+        <script type="text/javascript" src="d3/d3.js"></script>
+
+        <style type="text/css">
+
+            circle:hover {
+                fill: orange;
+            }
+        </style>
+    </head>
+    <body>
+<div>    
+<svg width="500" height="500" style = "background-color : springgreen" id = "xaxis"></svg>
+<svg width="500" height="500" style = "background-color : white" id = "main1"></svg>
+</div>
+
+<div>
+<svg width="500" height="500" style = "background-color : white" id = "main2"></svg>
+<svg width="500" height="500" style = "background-color : lightblue" id = "yaxis"></svg>
+</div>
+
+<p id="output">ccc</p>
+
+<script>
+
+var svg = d3.select("svg#main1"),
+    width = +svg.attr("width"),
+    height = +svg.attr("height"),
+    radius = 32;
+var svg2 = d3.select("svg#main2"),
+    width = +svg.attr("width"),
+    height = +svg.attr("height"),
+    radius = 32;
+
+var svgX = d3.select("svg#xaxis"),
+    width = +svg.attr("width"),
+    height = +svg.attr("height"),
+    radius = 32;
+
+var svgY = d3.select("svg#yaxis"),
+    width = +svg.attr("width"),
+    height = +svg.attr("height"),
+    radius = 32;
+
+var circles = d3.range(10).map(function() {
+  return {
+    x: Math.round(Math.random() * (width - radius * 2) + radius),
+    y: Math.round(Math.random() * (height - radius * 2) + radius)
+  };
+});
+//var circles = [{"x" : 100,"y" : 200}]
+var color = d3.scaleOrdinal()
+    .range(d3.schemeCategory20);
+
+svgX.selectAll("circle")
+  .data(circles)
+  .enter().append("circle")
+    .attr("cx", function(d) { return d.x; })
+    .attr("cy", function(d) { return d.y; })
+    .attr("r", radius)
+    .attr("id", function(d,i){ return "numb"+i; })
+    .call(d3.drag()
+        .on("start", dragstarted)
+        .on("drag", draggedX))
+
+svgY.selectAll("circle")
+  .data(circles)
+  .enter().append("circle")
+    .attr("cx", function(d) { return d.x; })
+    .attr("cy", function(d) { return d.y; })
+    .attr("r", radius)
+    .attr("id", function(d,i){ return "numb"+i; })
+    .call(d3.drag()
+        .on("start", dragstarted)
+        .on("drag", draggedY))
+
+svg.selectAll("circle")
+  .data(circles)
+  .enter().append("circle")
+    .attr("cx", function(d) { return d.y; })
+    .attr("cy", function(d) { return d.x; })
+    .attr("r", radius)
+    .style("fill", function(d, i) { return color(i); })
+    .attr("id", function(d,i) {return "numb"+i ; })
+svg2.selectAll("circle")
+  .data(circles)
+  .enter().append("circle")
+    .attr("cx", function(d) { return d.y; })
+    .attr("cy", function(d) { return d.x; })
+    .attr("r", radius)
+    .style("fill", function(d, i) { return color(i); })
+    .attr("id", function(d,i) {return "numb"+i ; })
+
+function dragstarted(d) {
+  d3.select(this).raise().classed("active", true);
+}
+
+function draggedX(d,i) {
+  d3.select("svg#xaxis > circle#numb"+i).attr("cy", d.y = d3.event.y);
+  d3.select("svg#main1").select("circle#numb"+i).attr("cx", d3.event.y);
+  d3.select("p#output").attr("textContent", "bb");
+}
+
+function draggedY(d,i) {
+  d3.select("svg#yaxis > circle#numb"+i).attr("cx", d.x = d3.event.x);
+  d3.select("svg#main2").select("circle#numb"+i).attr("cy", d3.event.x);
+}
+
+function dragended(d) {
+  d3.select(this).classed("active", false);
+}
+
+</script>
+
+
+    </body>
+</html>
